@@ -31,6 +31,9 @@ def querydslDir = "$buildDir/generated/querydsl"
 
 dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // Web
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     // MySQL
     runtimeOnly 'com.mysql:mysql-connector-j'
     // JPA
