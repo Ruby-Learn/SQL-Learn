@@ -104,3 +104,14 @@ WHERE       JOINED BETWEEN '2021-01-01' AND '2021-12-31'
 AND         AGE BETWEEN 20 AND 29
 ```
 </details>
+
+
+<details>
+<summary>가장 비싼 상품 구하기</summary>
+
+- https://school.programmers.co.kr/learn/courses/30/lessons/131697
+```sql
+SELECT      MAX(PRICE) AS MAX_PRICE
+FROM        PRODUCT
+```
+</details>
