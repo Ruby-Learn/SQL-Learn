@@ -27,3 +27,18 @@ HAVING      COUNT(*) > 1
 ORDER BY    USER_ID, PRODUCT_ID DESC;
 ```
 </details>
+
+
+<details>
+<summary>가격이 제일 비싼 식품의 정보 출력하기</summary>
+
+- https://school.programmers.co.kr/learn/courses/30/lessons/131115
+```sql
+SELECT      PRODUCT_ID, PRODUCT_NAME, PRODUCT_CD, CATEGORY, PRICE
+FROM        FOOD_PRODUCT
+WHERE       PRICE = (
+                        SELECT      MAX(PRICE)
+                        FROM        FOOD_PRODUCT
+                    );
+```
+</details>
