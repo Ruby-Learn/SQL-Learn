@@ -42,3 +42,44 @@ WHERE       PRICE = (
                     );
 ```
 </details>
+
+
+<details>
+<summary>진료과별 총 예약 횟수 출력하기</summary>
+
+- https://school.programmers.co.kr/learn/courses/30/lessons/132202
+```sql
+SELECT      MCDP_CD AS 진료과코드, COUNT(*) AS 5월예약건수
+FROM        APPOINTMENT
+WHERE       DATE_FORMAT(APNT_YMD, '%Y-%m') = '2022-05'
+GROUP BY    MCDP_CD, DATE_FORMAT(APNT_YMD, '%Y-%m')
+ORDER BY    5월예약건수, 진료과코드;
+```
+</details>
+
+
+<details>
+<summary>성분으로 구분한 아이스크림 총 주문량</summary>
+
+- https://school.programmers.co.kr/learn/courses/30/lessons/133026
+```sql
+SELECT      ICECREAM_INFO.INGREDIENT_TYPE, SUM(TOTAL_ORDER) AS TOTAL_ORDER
+FROM        FIRST_HALF, ICECREAM_INFO
+WHERE       FIRST_HALF.FLAVOR = ICECREAM_INFO.FLAVOR
+GROUP BY    ICECREAM_INFO.INGREDIENT_TYPE
+ORDER BY    TOTAL_ORDER;
+```
+</details>
+
+
+<details>
+<summary>가격대 별 상품 개수 구하기</summary>
+
+- https://school.programmers.co.kr/learn/courses/30/lessons/131530
+```sql
+SELECT      TRUNCATE(PRICE, -4) AS PRICE_GROUP, COUNT(*) AS PRODUCTS
+FROM        PRODUCT
+GROUP BY    TRUNCATE(PRICE, -4)
+ORDER BY    PRODUCTS;
+```
+</details>
