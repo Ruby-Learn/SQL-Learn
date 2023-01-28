@@ -77,3 +77,30 @@ AND         ICECREAM_INFO.INGREDIENT_TYPE = 'fruit_based'
 ORDER BY    FIRST_HALF.TOTAL_ORDER DESC;
 ```
 </details>
+
+
+<details>
+<summary>12세 이하인 여자 환자 목록 출력하기</summary>
+
+- https://school.programmers.co.kr/learn/courses/30/lessons/132201
+```sql
+SELECT      PT_NAME, PT_NO, GEND_CD, AGE, CASE WHEN TLNO IS NULL THEN 'NONE' ELSE TLNO END AS TLNO
+FROM        PATIENT
+WHERE       GEND_CD = 'W'
+AND         AGE <= 12
+ORDER BY    AGE DESC, PT_NAME;
+```
+</details>
+
+
+<details>
+<summary>조건에 맞는 회원수 구하기</summary>
+
+- https://school.programmers.co.kr/learn/courses/30/lessons/131535
+```sql
+SELECT      COUNT(*)
+FROM        USER_INFO
+WHERE       JOINED BETWEEN '2021-01-01' AND '2021-12-31'
+AND         AGE BETWEEN 20 AND 29
+```
+</details>
