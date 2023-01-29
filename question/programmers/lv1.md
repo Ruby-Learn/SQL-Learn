@@ -115,3 +115,31 @@ SELECT      MAX(PRICE) AS MAX_PRICE
 FROM        PRODUCT
 ```
 </details>
+
+
+<details>
+<summary>경기도에 위치한 식품창고 목록 출력하기</summary>
+
+- https://school.programmers.co.kr/learn/courses/30/lessons/131114
+```sql
+SELECT      WAREHOUSE_ID, 
+            WAREHOUSE_NAME, 
+            ADDRESS,
+            CASE WHEN FREEZER_YN IS NULL THEN 'N' ELSE FREEZER_YN END AS FREEZER_YN   
+FROM        FOOD_WAREHOUSE
+WHERE       ADDRESS LIKE '경기도 %'
+ORDER BY    WAREHOUSE_ID;
+```
+</details>
+
+
+<details>
+<summary>나이 정보가 없는 회원 수 구하기</summary>
+
+- https://school.programmers.co.kr/learn/courses/30/lessons/131528
+```sql
+SELECT      COUNT(*) AS USERS
+FROM        USER_INFO
+WHERE       AGE IS NULL;
+```
+</details>
