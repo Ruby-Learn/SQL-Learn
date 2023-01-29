@@ -99,3 +99,28 @@ AND         FOOD_PRODUCT.PRICE = SUB.MAX_PRICE
 ORDER BY    SUB.MAX_PRICE DESC;
 ```
 </details>
+
+
+<details>
+<summary>년, 월, 성별 별 상품 구매 회원 수 구하기</summary>
+
+- https://school.programmers.co.kr/learn/courses/30/lessons/131532
+```sql
+SELECT      YEAR,
+            MONTH,
+            GENDER,
+            COUNT(USER_ID)
+FROM        (
+                SELECT      DISTINCT
+                YEAR(SALES_DATE) AS YEAR,
+                MONTH(SALES_DATE) AS MONTH,
+                USER_INFO.GENDER AS GENDER,
+                ONLINE_SALE.USER_ID
+                FROM        USER_INFO, ONLINE_SALE
+                WHERE       USER_INFO.USER_ID = ONLINE_SALE.USER_ID
+                AND         USER_INFO.GENDER IS NOT NULL
+            ) AS SUB
+GROUP BY    YEAR, MONTH, GENDER
+ORDER BY    YEAR, MONTH, GENDER;
+```
+</details>
