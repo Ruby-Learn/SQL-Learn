@@ -124,3 +124,32 @@ GROUP BY    YEAR, MONTH, GENDER
 ORDER BY    YEAR, MONTH, GENDER;
 ```
 </details>
+
+
+<details>
+<summary>그룹별 조건에 맞는 식당 목록 출력하기</summary>
+
+- https://school.programmers.co.kr/learn/courses/30/lessons/131532
+```sql
+-- MEMBER_PROFILE : REST_REVIEW = 1 : N
+SELECT      MEMBER_PROFILE.MEMBER_NAME,
+            REST_REVIEW.REVIEW_TEXT,
+            DATE_FORMAT(REST_REVIEW.REVIEW_DATE, '%Y-%m-%d') AS REVIEW_DATE
+FROM        MEMBER_PROFILE, REST_REVIEW
+WHERE       MEMBER_PROFILE.MEMBER_ID = REST_REVIEW.MEMBER_ID
+AND         REST_REVIEW.MEMBER_ID IN (
+                                        SELECT      MEMBER_ID
+                                        FROM        REST_REVIEW
+                                        GROUP BY    MEMBER_ID
+                                        HAVING      COUNT(*) = (
+                                                                    SELECT      MAX(REVIEW_COUNT)
+                                                                    FROM        (
+                                                                                    SELECT      COUNT(*) AS REVIEW_COUNT
+                                                                                    FROM        REST_REVIEW
+                                                                                    GROUP BY    MEMBER_ID
+                                                                                ) AS SUB
+                                        )
+                                    )
+ORDER BY    REST_REVIEW.REVIEW_DATE, REST_REVIEW.REVIEW_TEXT;
+```
+</details>
