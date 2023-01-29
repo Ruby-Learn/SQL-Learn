@@ -99,3 +99,35 @@ GROUP BY    CAR_TYPE
 ORDER BY    CAR_TYPE;
 ```
 </details>
+
+
+<details>
+<summary>조건에 맞는 도서와 저자 리스트 출력하기</summary>
+
+- https://school.programmers.co.kr/learn/courses/30/lessons/144854
+```sql
+SELECT      BOOK.BOOK_ID, AUTHOR.AUTHOR_NAME, DATE_FORMAT(BOOK.PUBLISHED_DATE, '%Y-%m-%d') AS PUBLISHED_DATE
+FROM        BOOK, AUTHOR
+WHERE       BOOK.AUTHOR_ID = AUTHOR.AUTHOR_ID
+AND         BOOK.CATEGORY = '경제'
+ORDER BY    BOOK.PUBLISHED_DATE;
+```
+</details>
+
+
+<details>
+<summary>상품 별 오프라인 매출 구하기</summary>
+
+- https://school.programmers.co.kr/learn/courses/30/lessons/131533
+```sql
+SELECT      PRODUCT.PRODUCT_CODE, (PRODUCT.PRICE * SUB.AMOUNT) AS SALES
+FROM        PRODUCT, 
+            (
+                SELECT      PRODUCT_ID, SUM(SALES_AMOUNT) AS AMOUNT
+                FROM        OFFLINE_SALE
+                GROUP BY    PRODUCT_ID
+            ) AS SUB
+WHERE       PRODUCT.PRODUCT_ID = SUB.PRODUCT_ID
+ORDER BY    SALES DESC, PRODUCT.PRODUCT_CODE;
+```
+</details>
