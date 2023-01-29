@@ -49,3 +49,53 @@ FROM        (
 ORDER BY    SALES_DATE, PRODUCT_ID, USER_ID;
 ```
 </details>
+
+
+<details>
+<summary>저자 별 카테고리 별 매출액 집계하기</summary>
+
+- https://school.programmers.co.kr/learn/courses/30/lessons/144856
+```sql
+-- BOOK : AUTHOR = N : 1
+-- BOOK : BOOK_SALES = 1 : N
+SELECT      AUTHOR.AUTHOR_ID, 
+            AUTHOR.AUTHOR_NAME,
+            SUB.CATEGORY,
+            SUB.TOTAL_SALES
+FROM        (
+                SELECT      BOOK.AUTHOR_ID,
+                            BOOK.CATEGORY,
+                            (BOOK.PRICE * BOOK_SALES.SALES) AS TOTAL_SALES
+                FROM        BOOK, BOOK_SALES
+                WHERE       BOOK.BOOK_ID = BOOK_SALES.BOOK_ID
+                AND         YEAR(SALES_DATE) = 2022
+                AND         MONTH(SALES_DATE) = 1
+            ) AS SUB,
+            AUTHOR
+WHERE       SUB.AUTHOR_ID = AUTHOR.AUTHOR_ID
+GROUP BY    SUB.AUTHOR_ID, SUB.CATEGORY
+ORDER BY    AUTHOR.AUTHOR_ID, SUB.CATEGORY DESC;
+```
+</details>
+
+
+<details>
+<summary>식품분류별 가장 비싼 식품의 정보 조회하기</summary>
+
+- https://school.programmers.co.kr/learn/courses/30/lessons/131116
+```sql
+SELECT      FOOD_PRODUCT.CATEGORY,
+            SUB.MAX_PRICE,
+            FOOD_PRODUCT.PRODUCT_NAME
+FROM        FOOD_PRODUCT,
+            (
+                SELECT      CATEGORY, MAX(PRICE) AS MAX_PRICE
+                FROM        FOOD_PRODUCT
+                WHERE       CATEGORY IN ('과자', '국', '김치', '식용유')
+                GROUP BY    CATEGORY
+            ) AS SUB
+WHERE       FOOD_PRODUCT.CATEGORY = SUB.CATEGORY
+AND         FOOD_PRODUCT.PRICE = SUB.MAX_PRICE
+ORDER BY    SUB.MAX_PRICE DESC;
+```
+</details>
