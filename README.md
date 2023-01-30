@@ -108,3 +108,90 @@
 </details>
 
 
+<details>
+<summary style="font-size: x-large; font-weight: 600;">JOIN</summary>
+
+## JOIN
+- 여러 테이블을 연결하여 결합하는 연산
+- 조인을 통한 조회 결과 역시 테이블의 형태로 GROUP BY, ORDER BY 등을 적용할 수 있다.
+  ```sql
+                                                    -- 실행 순서
+  SELECT    name, SUM(saleprice)                    -- 5
+  FROM      Customer, Orders                        -- 1
+  WHERE     Customer.custid = Orders.custid         -- 2
+  GROUP BY  Customer.name                           -- 3
+  ORDER BY  Customer.name                           -- 4
+  ```
+
+### Cartesian Product
+- 조인된 테이블 간의 결합으로 발생할 수 있는 모든 경우를 출력하는 연산
+  - 조인된 결과가 연관관계에 맞지 않는 경우까지 포함
+- 테이블을 조인할 때 별도의 조건을 걸지 않을 경우에 발생
+  - 대부분 실무에서 Cartesian Product 의 결과를 조회하는 일은 거의 없다.
+
+### JOIN 문법
+![img.png](img/join.png)
+
+- 내부 조인
+  ```sql
+  SELECT        속성들
+  FROM          table1 , table2
+  WHERE         조인 조건
+  AND           검색 조건
+  
+  SELECT        속성들
+  FROM          table1
+  INNER JOIN    table2
+  ON            조인 조건
+  WHERE         검색 조건
+  AND           검색 조건
+  ```
+
+- 외부 조인
+  ```sql
+  SELECT                                속성들
+  FROM                                  table1
+  [LEFT | RIGHT | FULL] OUTER JOIN      table2
+  ON                                    조인 조건
+  WHERE                                 검색 조건
+  AND                                   검색 조건
+  ```
+
+</details>
+
+
+<details>
+<summary style="font-size: x-large; font-weight: 600;">Sub Query</summary>
+
+### Sub Query
+- 부속질의. SQL 문 내에 또 다른 SQL 문을 작성
+- 조회 결과를 또 다른 SQL 문에 활용하기 위해 사용
+  - WHERE 절에 사용
+    - WHERE 절에 사용되는 부속질의 결과가 동등, 크기 비교에 사용될 경우 부속질의 결과는 단일 값이어야 한다.
+    ```sql
+    SELECT  bookname
+    FROM    Book
+    WHERE   price = (
+                        SELECT  MAX(price)
+                        FROM    Book
+                    );
+    
+    
+    -- 부속질의가 있을 경우에는 하위 부속질의를 먼저 실행하고 그 결과를 이용하여 상위 부속질의를 실행
+    -- 2
+    SELECT  name
+    FROM    Customer
+    WHERE   custid IN (
+                        -- 1
+                        SELECT  custid
+                        FROM    Orders
+                    );
+    ```
+
+</details>
+
+
+<details>
+<summary style="font-size: x-large; font-weight: 600;">Set Operation</summary>
+
+</details>
