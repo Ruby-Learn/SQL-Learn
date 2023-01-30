@@ -163,30 +163,85 @@
 <details>
 <summary style="font-size: x-large; font-weight: 600;">Sub Query - 부속질의</summary>
 
-### Sub Query
+## Sub Query
 - 부속질의. SQL 문 내에 또 다른 SQL 문을 작성
 - 조회 결과를 또 다른 SQL 문에 활용하기 위해 사용
-  - WHERE 절에 사용
-    - WHERE 절에 사용되는 부속질의 결과가 동등, 크기 비교에 사용될 경우 부속질의 결과는 단일 값이어야 한다.
-    ```sql
-    SELECT  bookname
-    FROM    Book
-    WHERE   price = (
-                        SELECT  MAX(price)
-                        FROM    Book
-                    );
+
+### Sub Query 의 종류
+1. 중첩질의 - WHERE 부속질의
+  - WHERE 절에서 사용되는 부속질의
+  - 데이터를 선택하는 조건 혹은 술어와 함께 사용됨
+  - 중첩질의 연산자의 종류
+    ![img.png](img/subquery-operation.png)
+    1. 비교 연산자
+       - 비교 연산자는 부속질의가 반드시 단일 행, 단일 열을 반환해야한다.
+         ```sql
+         SELECT  bookname
+         FROM    Book
+         WHERE   price = (
+                         SELECT  MAX(price)
+                         FROM    Book
+                     );
+         ```
+         
+    2. 집합 연산자
+       - IN
+         - 메인 질의의 속성 값이 부속질의에서 제공한 결과 집합에 있는지 확인
+       - NOT IN
+         - 메인 질의의 속성 값이 부속질의에서 제공한 결과 집합에 없는지 확인
+       ```sql
+       SELECT  SUM(saleprice) AS 'total'
+       FROM    Orders
+       WHERE   custid IN (
+                            SELECT  custid
+                            FROM    Customer
+                            WHERE   address LIKE '%대한민국%'
+                        );
+       ```
+       
+    3. 한정 연산자
+       - 비교 연산자와 함께 사용
+       - ALL
+         - 부속질의의 모든 결과와 비교하여 비교 조건에 모두 만족하는지 확인
+       - SOME
+         - 부속질의의 모든 결과와 비교하여 비교 조건에 하나라도 만족하는지 확인
+       ```sql
+       SELECT   orderid, saleprice
+       FROM     Orders
+       WHERE    saleprice > ALL (
+                                    SELECT  saleprice
+                                    FROM    Orders
+                                    WHERE   custid = '3'
+                                );
+       
+       SELECT   orderid, saleprice
+       FROM     Orders
+       WHERE    saleprice > SOME (
+                                    SELECT  saleprice
+                                    FROM    Orders
+                                    WHERE   custid = '3'
+                                );
+       ```
     
-    
-    -- 부속질의가 있을 경우에는 하위 부속질의를 먼저 실행하고 그 결과를 이용하여 상위 부속질의를 실행
-    -- 2
-    SELECT  name
-    FROM    Customer
-    WHERE   custid IN (
-                        -- 1
-                        SELECT  custid
-                        FROM    Orders
-                    );
-    ```
+    4. 존재 연산자
+       - 데이터의 존재 여부를 확인할 때 사용
+       - EXISTS
+         - 메인 질의에서 부속질의로 제공된 속성의 값울 가지고 부속질의의 조건을 만족하여 값이 존재할 경우
+         메인 질의에서 해당 행의 데이터를 출력
+       - NOT EXISTS
+         - 메인 질의에서 부속질의로 제공된 속성의 값울 가지고 부속질의의 조건을 만족하여 값이 존재하지 않을 경우
+           메인 질의에서 해당 행의 데이터를 출력
+       ```sql
+       -- FROM 에 해당하는 데이터의 행들 중에서 부속질의의 조건을 만족하는 행들을 조회
+       SELECT   SUM(saleprice) AS 'total'
+       FROM     Orders od
+       WHERE    EXISTS (
+                            SELECT  *
+                            FROM    Customer cs
+                            WHERE   address LIKE '%대한민국%'
+                            AND     cs.custid = od.custid
+                        )    
+       ```
 
 </details>
 
