@@ -194,4 +194,65 @@
 <details>
 <summary style="font-size: x-large; font-weight: 600;">Set Operation</summary>
 
+## Set Operation
+- 집합연산. 두 개 이상의 테이블에서 조인을 사용하지 않고 연관된 데이터를 조회하는 방법  
+  ![img.png](img/set-operation.png)
+
+### UNION
+- 두 조회결과를 합한 하나의 결과를 조회
+  - A UNION B
+    - A 와 B 를 합한 결과를 중복을 제거하여 조회
+  - A UNION ALL B
+    - A 와 B 를 합한 결과를 중복을 제거하지 않고 조회
+  ```sql
+  -- Customer 와 team 에 있는 모든 이름을 중복을 제거하여 조회
+  SELECT    name
+  FROM      Customer
+  UNION
+  SELECT    name
+  FROM      team
+  
+  -- Customer 와 team 에 있는 모든 이름을 중복을 제거하지 않고 조회
+  SELECT    name
+  FROM      Customer
+  UNION ALL
+  SELECT    name
+  FROM      team
+  ```
+
+### INTERSECT
+- 두 조회결과에 모두 존재하는 행들을 조회
+  ```sql
+  -- Customer 와 team 양쪽에 모두 존재하는 이름을 조회
+  SELECT    name
+  FROM      Customer
+  INTERSECT
+  SELECT    name
+  FROM      team
+  ```
+
+### MINUS
+- 반대쪽 결과에 존재하지 않는 행들을 조회
+  ```sql
+  -- Customer 에 있는 이름들 중 team 에 없는 이름을 조회
+  SELECT    name
+  FROM      Customer
+  MINUS
+  SELECT    name
+  FROM      team
+  ```
+
+### EXISTS
+- 부속질의의 결과의 행이 존재하는 조건을 만족하는 메인질의의 행을 결과에 포함하여 조회
+  ```sql
+  -- 주문내역이 있는 고객의 이름과 주소를 조회
+                                                            -- 실행 순서
+  SELECT    name, address                                   -- 3
+  FROM      Customer cs                                     -- 1
+  WHERE     EXISTS (                                        -- 2 (1의 모든 행에 대하여 부속질의를 확인)
+                        SELECT  *
+                        FROM    Orders od
+                        WHERE   cs.custid = od.custid
+                    );
+  ```
 </details>
