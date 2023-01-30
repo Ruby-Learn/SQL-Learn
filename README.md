@@ -51,6 +51,60 @@
     ORDER BY    salary DESC;
     ```
 
+### 집계(통계) 함수
+- 여러 행으로부터 하나의 결과값을 반환하는 함수
+- SELECT 구문에서만 사용됨
+- 주로 평균, 합, 최대, 최소 등을 구하는 데 사용됨
+  - COUNT
+    - 지정한 컬럼(여러 컬럼 지정 가능)의 값이 NULL 이 아닌 행의 개수를 세는 집계함수.
+  - SUM
+    - 지정한 컬럼의 값의 총 합을 구하는 집계함수
+  - AVG
+    - 지정한 컬럼(여러 컬럼 지정 가능)의 값이 NULL 이 아닌 값들의 평균을 구하는 집계함수
+  - MIN
+    - 지정한 컬럼의 값들 중 최소값을 구하는 집계함수
+  - MAX
+    - 지정한 컬럼의 값들 중 최대값을 구하는 집계함수
+  ```sql
+  SELECT    SUM(saleprice) AS Total,
+            AVG(saleprice) AS Average,
+            MIN(saleprice) AS Mininum,
+            MAX(saleprice) AS Maximum
+  FROM      Orders;
+  
+  -- 판매 기록 수를 조회
+    SELECT    COUNT(*)
+    FROM      Orders;
+    
+    -- 중복을 제외한, 구매자 수를 조회
+    SELECT    COUNT(DISRINCT shoper)
+    FROM      Orders;
+  ```
+  
+### GROUP BY
+- 같은 속성 값끼리 그룹화할 때 사용
+- 그룹화 한 결과의 SELECT 절에는 GROUP BY 에서 명시한 속성과 집계함수만 사용할 수 있다.
+  ```sql
+  SELECT      custid, COUNT(*) AS 판매수량, SUM(saleprice) AS 총 판매액
+  FROM        Orders
+  GROUP BY    custid;
+  ```  
+  ![img.png](img/group-by.png)  
+  *그룹화 전과 그룹화 후의 결과 비교*  
+
+### HAVING
+- GROUP BY 로 그룹화한 그룹을 제한하여 조회할 때 사용
+  1. WHERE 절에 작성한 결과를 GROUP BY 절로 그룹화
+  2. 1의 결과에서 HAVING 조건애 해댱하는 결과를 최종 결과로 출력
+  ```sql
+                                                -- 실행 순서
+  SELECT      custid, COUNT(*) AS 도서수량        -- 5
+  FROM        Orders                            -- 1
+  WHERE       saleprice >= 8000                 -- 2
+  GROUP BY    custid                            -- 3
+  HAVING      COUNT(*) >= 2                     -- 4
+  ORDER BY    custid;                           -- 6
+  ```
 </details>
 
 
