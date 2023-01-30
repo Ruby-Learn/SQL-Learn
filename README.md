@@ -161,7 +161,7 @@
 
 
 <details>
-<summary style="font-size: x-large; font-weight: 600;">Sub Query</summary>
+<summary style="font-size: x-large; font-weight: 600;">Sub Query - 부속질의</summary>
 
 ### Sub Query
 - 부속질의. SQL 문 내에 또 다른 SQL 문을 작성
@@ -192,7 +192,7 @@
 
 
 <details>
-<summary style="font-size: x-large; font-weight: 600;">Set Operation</summary>
+<summary style="font-size: x-large; font-weight: 600;">Set Operation - 집합연산</summary>
 
 ## Set Operation
 - 집합연산. 두 개 이상의 테이블에서 조인을 사용하지 않고 연관된 데이터를 조회하는 방법  
@@ -255,4 +255,111 @@
                         WHERE   cs.custid = od.custid
                     );
   ```
+</details>
+
+
+<details>
+<summary style="font-size: x-large; font-weight: 600;">INSERT</summary>
+
+### INSERT
+- 테이블에 새로운 튜플을 삽입하는 명령어
+  ```sql
+  INSERT INTO   MEMBER(name, email)             -- 컬럼을 지정하지 않을 경우 values 에 모든 컬럼을 값을 넣어주어야 한다.
+  VALUES        ('ruby', 'ruby@gmail.com');
+  ```
+
+</details>
+
+
+<details>
+<summary style="font-size: x-large; font-weight: 600;">UPDATE</summary>
+
+### UPDATE
+- 특정 속성값을 수정하는 명령어
+  ```sql
+  UPDATE    MEMBER
+  SET       name = 'diamond', email = 'diamond@gmail.com'
+  WHERE     id = 1;
+  -- 조건을 걸지 않으면 테이블의 모든 행을 대상으로 속성을 변경하므로 주의해야한다.
+  -- 특정 한 행의 속성을 변경할 때에는 조건에 PK, Unique 값을 조건으로 걸어준다.
+  ```
+
+</details>
+
+
+<details>
+<summary style="font-size: x-large; font-weight: 600;">DELETE</summary>
+
+### DELETE
+- 테이블의 기존 튜플을 삭제하는 명령어
+  ```sql
+  DELETE
+  FROM      MEMBER
+  WHERE     id = 1;
+  -- 조건을 걸지 않으면 테이블의 모든 행을 삭제하므로 주의해야한다.
+  -- 특정 한 행의 속성을 삭제할 때에는 조건에 PK, Unique 값을 조건으로 걸어준다.
+  ```
+
+</details>
+
+
+<details>
+<summary style="font-size: x-large; font-weight: 600;">STORED FUNCTION - 내장함수</summary>
+
+## STORED FUNCTION
+- 상수나 속성 이름을 입력값으로 받아 단일 값을 결과로 반환하는 함수
+
+### 숫자 관련 내장 함수
+![img.png](img/number-function.png)  
+```sql
+-- 숫자 대신 숫자 값을 가지는 열이름을 사용할 수도 있다.
+SELECT      ABS(-5),                -- 5
+            ROUND(124.56, 1),       -- 124,6
+            ROUND(1245000, -3),     -- 1250000
+            CEIL(124.56),           -- 124
+            POWER(2, 3),            -- 8
+            SQRT(9),                -- 3
+            SIGN(14),               -- 1
+            SIGN(-14),              -- -1
+            SIGN(0),                -- 0
+            LOG(10)                 -- 2.30259
+FROM        DUAL;
+```
+
+### 문자 함수
+![img_1.png](img/string-function.png)  
+```sql
+SELECT      REPLACE('플루트는 관약기', '플루트', '클라리넷'),          -- 클라리넷는 관약기
+            LENGTH('플루트'),                                    -- 3
+            SUBSTR('플루트는 관약기', 1, 6),                       -- 플루트는 관. 두번째 인자는 시작 위치(1부터 시작), 세번째 인자는 길이
+            LOWER('FLUTE'),                                    -- flute 
+            UPPER('flute'),                                    -- FLUTE
+            LPAD('page 1', 10, '*'),                            -- ****page 1
+            RPAD('page 1', 10, '*'),                            -- page 1****
+FROM        DUAL;
+```
+
+### 날짜 / 시간 함수
+![img.png](img/date-function.png)  
+```sql
+SELECT      TO_DATE('2023-01-30', 'yyyy-mm-dd'),                            -- 2023-01-30
+            TO_CHAR(TO_DATE('2023-01-30', 'yyyy-mm-dd'), 'yyyymmdd'),       -- '20230130'
+FROM        DUAL;
+```
+</details>
+
+
+<details>
+<summary style="font-size: x-large; font-weight: 600;">ROWNUM</summary>
+
+### ROWNUM
+- 오라클 내부적으로 생성되는 가상 컬럼
+- 조회 결과의 순번을 나타냄 (1번 부터 시작)
+```sql
+SELECT      ROWNUM AS '순번', custid, name, phone
+FROM        CUSTOMER
+WHERE       ROWNUM <= 2;
+```
+![img.png](img/rownum.png)
+
 </details>
