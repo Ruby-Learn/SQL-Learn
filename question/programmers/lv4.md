@@ -153,3 +153,46 @@ AND         REST_REVIEW.MEMBER_ID IN (
 ORDER BY    REST_REVIEW.REVIEW_DATE, REST_REVIEW.REVIEW_TEXT;
 ```
 </details>
+
+
+<details>
+<summary>5월 식품들의 총매출 조회하기</summary>
+
+- https://school.programmers.co.kr/learn/courses/30/lessons/131117
+```sql
+-- FOOD_PRODUCT : FOOD_ORDER = 1 : N
+SELECT      FOOD_PRODUCT.PRODUCT_ID, 
+            FOOD_PRODUCT.PRODUCT_NAME,
+            (FOOD_PRODUCT.PRICE * SUB.TOTAL_AMOUNT) AS TOTAL_SALES
+FROM        FOOD_PRODUCT,
+            (
+                SELECT      PRODUCT_ID, SUM(AMOUNT) AS TOTAL_AMOUNT
+                FROM        FOOD_ORDER
+                WHERE       YEAR(PRODUCE_DATE) = 2022
+                AND         MONTH(PRODUCE_DATE) = 5
+                GROUP BY    PRODUCT_ID
+            ) AS SUB
+WHERE       FOOD_PRODUCT.PRODUCT_ID = SUB.PRODUCT_ID
+ORDER BY    TOTAL_SALES DESC, FOOD_PRODUCT.PRODUCT_ID;
+```
+</details>
+
+
+<details>
+<summary>주문량이 많은 아이스크림들 조회하기</summary>
+
+- https://school.programmers.co.kr/learn/courses/30/lessons/133027
+```sql
+SELECT      FLAVOR
+FROM        (
+                SELECT      FLAVOR, TOTAL_ORDER
+                FROM        FIRST_HALF
+                UNION ALL
+                SELECT      FLAVOR, TOTAL_ORDER
+                FROM        JULY
+            ) AS SUB
+GROUP BY    FLAVOR
+ORDER BY    SUM(TOTAL_ORDER) DESC
+LIMIT       3;
+```
+</details>
