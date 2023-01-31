@@ -169,79 +169,127 @@
 
 ### Sub Query 의 종류
 1. 중첩질의 - WHERE 부속질의
-  - WHERE 절에서 사용되는 부속질의
-  - 데이터를 선택하는 조건 혹은 술어와 함께 사용됨
-  - 중첩질의 연산자의 종류
-    ![img.png](img/subquery-operation.png)
-    1. 비교 연산자
-       - 비교 연산자는 부속질의가 반드시 단일 행, 단일 열을 반환해야한다.
-         ```sql
-         SELECT  bookname
-         FROM    Book
-         WHERE   price = (
-                         SELECT  MAX(price)
-                         FROM    Book
-                     );
-         ```
+   - WHERE 절에서 사용되는 부속질의
+   - 데이터를 선택하는 조건 혹은 술어와 함께 사용됨
+   - 중첩질의 연산자의 종류
+     ![img.png](img/subquery-operation.png)  
+     1. 비교 연산자
+        - 비교 연산자는 부속질의가 반드시 단일 행, 단일 열을 반환해야한다.
+          ```sql
+          SELECT  bookname
+          FROM    Book
+          WHERE   price = (
+                          SELECT  MAX(price)
+                          FROM    Book
+                      );
+          ```
          
-    2. 집합 연산자
-       - IN
-         - 메인 질의의 속성 값이 부속질의에서 제공한 결과 집합에 있는지 확인
-       - NOT IN
-         - 메인 질의의 속성 값이 부속질의에서 제공한 결과 집합에 없는지 확인
-       ```sql
-       SELECT  SUM(saleprice) AS 'total'
-       FROM    Orders
-       WHERE   custid IN (
-                            SELECT  custid
-                            FROM    Customer
-                            WHERE   address LIKE '%대한민국%'
-                        );
-       ```
+     2. 집합 연산자
+        - IN
+          - 메인 질의의 속성 값이 부속질의에서 제공한 결과 집합에 있는지 확인
+        - NOT IN
+          - 메인 질의의 속성 값이 부속질의에서 제공한 결과 집합에 없는지 확인
+        ```sql
+        SELECT  SUM(saleprice) AS 'total'
+        FROM    Orders
+        WHERE   custid IN (
+                             SELECT  custid
+                             FROM    Customer
+                             WHERE   address LIKE '%대한민국%'
+                         );
+        ```
        
-    3. 한정 연산자
-       - 비교 연산자와 함께 사용
-       - ALL
-         - 부속질의의 모든 결과와 비교하여 비교 조건에 모두 만족하는지 확인
-       - SOME
-         - 부속질의의 모든 결과와 비교하여 비교 조건에 하나라도 만족하는지 확인
-       ```sql
-       SELECT   orderid, saleprice
-       FROM     Orders
-       WHERE    saleprice > ALL (
-                                    SELECT  saleprice
-                                    FROM    Orders
-                                    WHERE   custid = '3'
-                                );
+     3. 한정 연산자
+        - 비교 연산자와 함께 사용
+        - ALL
+          - 부속질의의 모든 결과와 비교하여 비교 조건에 모두 만족하는지 확인
+        - SOME
+          - 부속질의의 모든 결과와 비교하여 비교 조건에 하나라도 만족하는지 확인
+        ```sql
+        SELECT   orderid, saleprice
+        FROM     Orders
+        WHERE    saleprice > ALL (
+                                     SELECT  saleprice
+                                     FROM    Orders
+                                     WHERE   custid = '3'
+                                 );
        
-       SELECT   orderid, saleprice
-       FROM     Orders
-       WHERE    saleprice > SOME (
-                                    SELECT  saleprice
-                                    FROM    Orders
-                                    WHERE   custid = '3'
-                                );
-       ```
+        SELECT   orderid, saleprice
+        FROM     Orders
+        WHERE    saleprice > SOME (
+                                     SELECT  saleprice
+                                     FROM    Orders
+                                     WHERE   custid = '3'
+                                 );
+        ```
     
-    4. 존재 연산자
-       - 데이터의 존재 여부를 확인할 때 사용
-       - EXISTS
-         - 메인 질의에서 부속질의로 제공된 속성의 값울 가지고 부속질의의 조건을 만족하여 값이 존재할 경우
-         메인 질의에서 해당 행의 데이터를 출력
-       - NOT EXISTS
-         - 메인 질의에서 부속질의로 제공된 속성의 값울 가지고 부속질의의 조건을 만족하여 값이 존재하지 않을 경우
-           메인 질의에서 해당 행의 데이터를 출력
-       ```sql
-       -- FROM 에 해당하는 데이터의 행들 중에서 부속질의의 조건을 만족하는 행들을 조회
-       SELECT   SUM(saleprice) AS 'total'
-       FROM     Orders od
-       WHERE    EXISTS (
-                            SELECT  *
-                            FROM    Customer cs
-                            WHERE   address LIKE '%대한민국%'
-                            AND     cs.custid = od.custid
-                        )    
-       ```
+     4. 존재 연산자
+        - 데이터의 존재 여부를 확인할 때 사용
+        - EXISTS
+          - 메인 질의에서 부속질의로 제공된 속성의 값울 가지고 부속질의의 조건을 만족하여 값이 존재할 경우
+          메인 질의에서 해당 행의 데이터를 출력
+        - NOT EXISTS
+          - 메인 질의에서 부속질의로 제공된 속성의 값울 가지고 부속질의의 조건을 만족하여 값이 존재하지 않을 경우
+            메인 질의에서 해당 행의 데이터를 출력
+        ```sql
+        -- FROM 에 해당하는 데이터의 행들 중에서 부속질의의 조건을 만족하는 행들을 조회
+        SELECT   SUM(saleprice) AS 'total'
+        FROM     Orders od
+        WHERE    EXISTS (
+                             SELECT  *
+                             FROM    Customer cs
+                             WHERE   address LIKE '%대한민국%'
+                             AND     cs.custid = od.custid
+                         )    
+        ```
+       
+2. 스칼라 부속질의 - SELECT 부속질의
+    - SELECT 절에 사용되는 부속질의
+    - 단일 행, 단일 열의 스칼라 값(단일 값)으로 반환
+      - 원칙적으로 스칼라 값이 들어갈 수 있는 모든 곳에 사용 가능하며, 읿잔적으로 SELECT 문과 UPDATE SET 절에 사용됨
+      ```sql
+      -- 모든 행에 대해서 행의 수만큼 부속질의가 실행되므로 성능상 문제가 될 수 있다.
+                                                                -- 실행 순서
+      SELECT                                                    -- 4
+                custid, 
+                (                                               -- 3
+                    SELECT      name
+                    FROM        Customer cs
+                    WHERE       cs.custid = od.custid
+                ),
+                SUM(saleprice)
+      FROM      Orders od                                       -- 1
+      GROUP BY  custid;                                         -- 2
+
+      
+      -- Orders 테이블의 모든 bookname 을 Book 테이블의 Book.bookid = Orders.bookid 조건에 맞는 bookname 으로 변경
+      UPDATE    Orders
+      SET       bookname = (
+                                SELECT      bookname
+                                FROM        Book
+                                WHERE       Book.bookid = Orders.bookid
+                            ) 
+      ```
+      
+3. 인라인 뷰 - FROM 부속질의
+    - FROM 절에서 사용되는 부속질의
+      - VIEW
+        - 일시적으로 만들어진 가상의 테이블
+    - 테이블 대신 인라인 뷰 부속질의를 사용
+      - 부속질의의 조회 결과가 테이블의 역할을 담당
+    ```sql
+                                                        -- 실행 순서
+    SELECT      cs.name, SUM(id.saleprice) 'total'      -- 4
+    FROM        (
+                                                        -- 1
+                    SELECT      custid, name
+                    FROM        Customer
+                    WHERE       custid <= 2
+                ) AS cs,
+                Orders od
+    WHERE       cs.custid = od.custid                   -- 2
+    GROUP BY    cs.name;                                -- 3
+    ```
 
 </details>
 
