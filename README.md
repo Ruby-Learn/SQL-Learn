@@ -51,4 +51,7 @@
       - 다른 개체와 최소 한 개 이상의 관계를 맺고 있다.
   - Attribute - 속성
     - 개체가 가진 성질
-        ![img.png](img/attribute.png)
+        ![img.png](img/attribute.png)  
+- 관계와 관계 타입  
+    ![img.png](img/relation1.png)  
+    ![img_1.png](img/relation2.png)
